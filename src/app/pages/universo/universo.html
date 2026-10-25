@@ -1,0 +1,152 @@
+<div class="page">
+  <a class="back" routerLink="/">← Universos</a>
+
+  @if (summary(); as s) {
+    <section class="page-header">
+      <div>
+        <h1>{{ s.host }}</h1>
+        <p>
+          Jugador {{ s.playerId }} · exportación más reciente
+          {{ s.exportedAt ? (s.exportedAt | date: 'short') : '—' }} ·
+          {{ s.importCount }} importación(es)
+        </p>
+      </div>
+      <div class="row">
+        <a class="btn primary" routerLink="/exportar" [queryParams]="{ u: s.slug }">Exportar</a>
+        <button class="btn danger" type="button" (click)="remove()">Eliminar</button>
+      </div>
+    </section>
+
+    @if (detail.value(); as d) {
+      <section class="stats">
+        <div class="stat">
+          <b>{{ d.totals.expeditions | number }}</b
+          ><span>Expediciones</span>
+        </div>
+        <div class="stat">
+          <b
+            >{{ d.totals.found[0] | compact }} / {{ d.totals.found[1] | compact }} /
+            {{ d.totals.found[2] | compact }}</b
+          >
+          <span>Metal / cristal / deuterio en expediciones</span>
+        </div>
+        <div class="stat">
+          <b>{{ d.totals.found[3] | number }}</b
+          ><span>Materia oscura</span>
+        </div>
+        <div class="stat">
+          <b>{{ d.totals.combats | number }}</b
+          ><span>Combates</span>
+        </div>
+        <div class="stat">
+          <b
+            >{{ d.totals.loot[0] | compact }} / {{ d.totals.loot[1] | compact }} /
+            {{ d.totals.loot[2] | compact }}</b
+          >
+          <span>Botín metal / cristal / deuterio</span>
+        </div>
+        <div class="stat">
+          <b>{{ rawCounts().expeditions | number }} / {{ rawCounts().combats | number }}</b>
+          <span>Expediciones / combates en bruto</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Agregados diarios fusionados</h2>
+        <p class="muted legend">
+          Origen: <span class="tag bruto">bruto</span> recalculado desde los informes ·
+          <span class="tag importado">importado</span> el agregado importado más alto ·
+          <span class="tag mixto">mixto</span> combinación.
+        </p>
+        <div class="table-wrap scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th class="num">Exped.</th>
+                <th>Origen</th>
+                <th class="num">Metal</th>
+                <th class="num">Cristal</th>
+                <th class="num">Deut.</th>
+                <th class="num">MO</th>
+                <th class="num">Combates</th>
+                <th>Origen</th>
+                <th class="num">Botín M</th>
+                <th class="num">Botín C</th>
+                <th class="num">Botín D</th>
+                <th class="num">Descubr.</th>
+                <th>Origen</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of d.rows; track r.day) {
+                <tr>
+                  <td>{{ r.day }}</td>
+                  <td class="num">{{ r.expeditions ?? '—' }}</td>
+                  <td>
+                    @if (r.expSource) {
+                      <span class="tag" [class]="r.expSource">{{ r.expSource }}</span>
+                    }
+                  </td>
+                  @for (v of r.found; track $index) {
+                    <td class="num">{{ v | compact }}</td>
+                  }
+                  <td class="num">{{ r.combats ?? '—' }}</td>
+                  <td>
+                    @if (r.comSource) {
+                      <span class="tag" [class]="r.comSource">{{ r.comSource }}</span>
+                    }
+                  </td>
+                  @for (v of r.loot; track $index) {
+                    <td class="num" [class.neg]="v < 0">{{ v | compact }}</td>
+                  }
+                  <td class="num">{{ r.discoveries ?? '—' }}</td>
+                  <td>
+                    @if (r.disSource) {
+                      <span class="tag" [class]="r.disSource">{{ r.disSource }}</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Archivos importados</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Archivo</th>
+                <th>Importado</th>
+                <th>Exportado (aprox.)</th>
+                <th>Aportó</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (imp of d.imports; track imp.id) {
+                <tr>
+                  <td>{{ imp.fileName }}</td>
+                  <td>{{ imp.importedAt | date: 'short' }}</td>
+                  <td>{{ imp.exportedAt ? (imp.exportedAt | date: 'short') : '—' }}</td>
+                  <td>
+                    {{ imp.stats.newRecords }} nuevos, {{ imp.stats.updatedRecords }} actualizados,
+                    {{ imp.stats.newDays + imp.stats.betterDays }} días de agregados
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    } @else if (detail.isLoading()) {
+      <p class="muted">Cargando…</p>
+    }
+  } @else if (summary() === undefined && dbReady()) {
+    <div class="card empty">
+      No hay datos de este universo. <a routerLink="/">Volver al listado</a>.
+    </div>
+  }
+</div>

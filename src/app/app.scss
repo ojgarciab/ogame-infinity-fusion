@@ -1,0 +1,134 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+
+  a {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    &.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+  }
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.banner {
+  max-width: var(--max-width);
+  margin: 12px auto 0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  &.error {
+    background: var(--danger-soft);
+  }
+}
+
+.footer {
+  color: var(--muted);
+  font-size: 12px;
+  padding-bottom: 32px;
+}
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 12px 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+
+  .err {
+    color: var(--danger);
+  }
+}
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+
+  > div {
+    border: 3px dashed var(--accent);
+    border-radius: 16px;
+    padding: 48px 64px;
+    text-align: center;
+    background: var(--surface);
+    font-size: 18px;
+  }
+
+  svg {
+    width: 48px;
+    height: 48px;
+    stroke: var(--accent);
+  }
+}
+
+@media (max-width: 600px) {
+  .brand span,
+  .topbar-actions .btn:not(.icon) span {
+    display: none;
+  }
+
+  .topbar-inner {
+    gap: 8px;
+  }
+}
