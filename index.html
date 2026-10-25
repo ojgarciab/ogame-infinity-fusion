@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OGI Fusion</title>
+    <meta name="description" content="Fusiona exportaciones de OGame Infinity de uno o varios universos. 100% local." />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div>
+        <h1>OGI Fusion</h1>
+        <p class="sub">
+          Fusiona exportaciones <code>.data</code> de OGame Infinity y conserva el histórico más allá de los 5 días que
+          guarda la extensión. Todo se procesa y almacena en este navegador (IndexedDB); nada sale de tu equipo.
+        </p>
+      </div>
+      <div id="storage" class="storage"></div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>1. Importar</h2>
+        <label id="drop" class="drop" for="file">
+          <input id="file" type="file" accept=".data,.json,application/json,text/plain" multiple hidden />
+          <strong>Arrastra aquí archivos <code>.data</code></strong>
+          <span>o haz clic para seleccionarlos (puedes elegir varios, de uno o varios universos)</span>
+        </label>
+        <ul id="log" class="log"></ul>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <h2>2. Universos</h2>
+          <button id="clear" class="btn danger small" type="button">Borrar todo</button>
+        </div>
+        <div class="table-wrap">
+          <table id="universes">
+            <thead>
+              <tr>
+                <th><input id="select-all" type="checkbox" aria-label="Seleccionar todos" /></th>
+                <th>Universo</th>
+                <th>Jugador</th>
+                <th>Exportación más reciente</th>
+                <th class="num">Importaciones</th>
+                <th class="num">Expediciones en bruto</th>
+                <th class="num">Combates en bruto</th>
+                <th>Días con agregados</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="empty" class="muted">Todavía no hay datos. Importa al menos un archivo.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Exportar</h2>
+        <p class="muted">
+          Se genera un <code>.data</code> por universo, compatible con el botón «Importar» de OGame Infinity. Contiene
+          todo lo de la exportación más reciente, con los registros en bruto fusionados y los agregados diarios
+          recalculados.
+        </p>
+        <label class="check">
+          <input id="full-history" type="checkbox" />
+          Incluir todo el histórico en bruto (copia de seguridad completa). Sin marcar, solo se incluyen los registros
+          que OGI conserva (5 días de expediciones, descubrimientos y recolecciones), para no superar su límite de 5 MB.
+        </label>
+        <button id="export" class="btn primary" type="button" disabled>Exportar seleccionados</button>
+        <ul id="export-log" class="log"></ul>
+      </section>
+
+      <section id="detail" class="card" hidden>
+        <div class="row">
+          <h2 id="detail-title">Detalle</h2>
+          <button id="detail-close" class="btn small" type="button">Cerrar</button>
+        </div>
+        <div id="detail-body"></div>
+      </section>
+    </main>
+
+    <footer class="muted">
+      Los días se agrupan con la zona horaria de este navegador, igual que OGI. Origen de cada agregado: <b>bruto</b> =
+      recalculado desde los informes, <b>importado</b> = el agregado importado más alto, <b>mixto</b> = combinación.
+    </footer>
+
+    <script src="js/merge.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

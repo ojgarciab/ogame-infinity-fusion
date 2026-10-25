@@ -1,0 +1,10 @@
+{
+  "name": "ogame-infinity-fusion",
+  "private": true,
+  "type": "module",
+  "description": "Aplicación web 100% local para fusionar exportaciones de OGame Infinity",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "start": "python3 -m http.server 8000"
+  }
+}
