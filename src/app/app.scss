@@ -71,6 +71,15 @@
   font-size: 12px;
   padding-top: 0;
   padding-bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + 24px);
+
+  p {
+    margin: 0 0 4px;
+  }
+
+  .credits a {
+    display: inline-block;
+    padding: 4px 0;
+  }
 }
 
 .nav-bottom {
