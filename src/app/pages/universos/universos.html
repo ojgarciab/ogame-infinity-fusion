@@ -1,0 +1,80 @@
+<div class="page">
+  <section class="intro">
+    <h1>Fusiona tus exportaciones de OGame Infinity</h1>
+    <p class="muted">
+      Importa archivos <code>.data</code> de uno o varios universos. Se conserva el histórico que la
+      extensión borra a los 5 días y podrás exportar un <code>.data</code> fusionado por universo.
+    </p>
+    <label class="dropzone">
+      <input #fileInput type="file" multiple hidden (change)="onFiles(fileInput)" />
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3" />
+      </svg>
+      <strong>{{ importer.busy() ? 'Importando…' : 'Seleccionar archivos .data' }}</strong>
+      <span class="muted hint-touch">Puedes elegir varios a la vez</span>
+      <span class="muted hint-pointer">o arrástralos a cualquier parte de la ventana</span>
+    </label>
+  </section>
+
+  @if (importer.log().length) {
+    <details class="card log-card" [open]="importer.log().length <= 4">
+      <summary class="row">
+        <h2>Últimas importaciones ({{ importer.log().length }})</h2>
+      </summary>
+      <ul class="log">
+        @for (entry of importer.log(); track entry) {
+          <li>
+            <span [class]="entry.level">{{
+              entry.level === 'ok' ? '✔' : entry.level === 'warn' ? '⚠' : '✖'
+            }}</span>
+            <span>
+              <strong>{{ entry.file }}</strong
+              ><br />
+              {{ entry.message }}
+              @if (entry.slug) {
+                <a [routerLink]="['/universo', entry.slug]">Ver universo</a>
+              }
+            </span>
+          </li>
+        }
+      </ul>
+      <button class="btn small" type="button" (click)="importer.clearLog()">Limpiar</button>
+    </details>
+  }
+
+  <section class="section-head">
+    <h2>Universos con datos</h2>
+    <span class="muted">{{ db.universes().length }}</span>
+  </section>
+
+  @if (db.universes().length) {
+    <div class="grid">
+      @for (u of db.universes(); track u.id) {
+        <a class="card universe" [routerLink]="['/universo', u.slug]">
+          <div class="universe-head">
+            <span class="badge">{{ u.universe || '?' }}</span>
+            <div class="universe-title">
+              <h3>{{ u.host }}</h3>
+              <span class="muted">Jugador {{ u.playerId }} · {{ u.lang | uppercase }}</span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m9 6 6 6-6 6" />
+            </svg>
+          </div>
+          <dl class="kv">
+            <dt>Última exportación</dt>
+            <dd>{{ u.exportedAt ? (u.exportedAt | date: 'short') : '—' }}</dd>
+            <dt>Expediciones / combates</dt>
+            <dd>{{ u.expeditions | number }} / {{ u.combats | number }}</dd>
+            <dt>Agregados</dt>
+            <dd>{{ u.days ? u.days + ' días' : '—' }}</dd>
+          </dl>
+        </a>
+      }
+    </div>
+  } @else if (db.ready()) {
+    <div class="card empty">
+      Todavía no hay datos. Importa al menos un archivo <code>.data</code>.
+    </div>
+  }
+</div>

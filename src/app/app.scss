@@ -1,0 +1,246 @@
+// Mobile-first: cabecera compacta y navegación inferior; en pantallas anchas la
+// navegación pasa a la cabecera.
+
+.file-input {
+  display: none;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: var(--safe-top);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+  max-width: var(--max-width);
+  min-height: var(--topbar-h);
+  margin: 0 auto;
+  padding: 6px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-height: var(--touch);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-top,
+.import-top {
+  display: none;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.banner {
+  margin: 12px var(--gutter) 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  &.error {
+    background: var(--danger-soft);
+  }
+}
+
+// Espacio para que la navegación inferior no tape el contenido.
+.main {
+  padding-bottom: 8px;
+}
+
+.footer {
+  color: var(--muted);
+  font-size: 12px;
+  padding-top: 0;
+  padding-bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + 24px);
+}
+
+.nav-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: calc(var(--bottomnav-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+
+  a,
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    touch-action: manipulation;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    &.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}
+
+.import-fab {
+  color: var(--text) !important;
+
+  .fab-circle {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-top: -22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 25%);
+    border: 4px solid var(--surface);
+  }
+}
+
+.toast {
+  position: fixed;
+  left: var(--gutter);
+  right: var(--gutter);
+  // En móvil arriba: abajo están la navegación y las acciones principales.
+  top: calc(var(--topbar-h) + var(--safe-top) + 8px);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+  font-size: 14px;
+
+  .toast-text {
+    flex: 1;
+  }
+
+  .err {
+    color: var(--danger);
+  }
+}
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+
+  > div {
+    border: 3px dashed var(--accent);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    background: var(--surface);
+    font-size: 18px;
+  }
+
+  svg {
+    width: 48px;
+    height: 48px;
+    stroke: var(--accent);
+  }
+}
+
+@media (min-width: 768px) {
+  .brand {
+    flex: none;
+  }
+
+  .nav-top {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+
+    a {
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--text);
+        background: var(--surface-2);
+      }
+
+      &.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+      }
+    }
+  }
+
+  .import-top {
+    display: inline-flex;
+  }
+
+  .nav-bottom {
+    display: none;
+  }
+
+  .footer {
+    padding-bottom: 32px;
+  }
+
+  .banner {
+    max-width: var(--max-width);
+    margin: 12px auto 0;
+  }
+
+  .toast {
+    left: auto;
+    top: auto;
+    bottom: 16px;
+    max-width: 480px;
+  }
+}

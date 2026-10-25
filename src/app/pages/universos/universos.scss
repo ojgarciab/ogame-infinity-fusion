@@ -1,0 +1,149 @@
+.intro {
+  display: grid;
+  gap: 12px;
+
+  h1,
+  p {
+    margin: 0;
+  }
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 132px;
+  padding: 20px 12px;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  &:active {
+    background: var(--surface-2);
+  }
+
+  svg {
+    width: 32px;
+    height: 32px;
+    stroke: var(--accent);
+  }
+}
+
+// En pantallas táctiles no se ofrece arrastrar.
+.hint-pointer {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hint-touch {
+    display: none;
+  }
+
+  .hint-pointer {
+    display: inline;
+  }
+
+  .dropzone:hover {
+    border-color: var(--accent);
+    background: var(--surface-2);
+  }
+}
+
+.log-card {
+  summary {
+    cursor: pointer;
+    list-style: none;
+    min-height: var(--touch);
+
+    h2 {
+      margin: 0;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+.universe {
+  display: grid;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+
+  &:active {
+    border-color: var(--accent);
+  }
+}
+
+.universe-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.universe-title {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span {
+    font-size: 14px;
+  }
+}
+
+.chevron {
+  color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .universe:hover {
+    border-color: var(--accent);
+  }
+}
