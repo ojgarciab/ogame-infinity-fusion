@@ -3,60 +3,48 @@
     <div>
       <h1>Exportar</h1>
       <p>
-        Elige los universos. Se descarga un <code>.data</code> por universo, compatible con el botón
-        «Importar» de OGame Infinity.
+        Elige los universos: se descarga un <code>.data</code> por universo, listo para «Importar»
+        en OGame Infinity.
       </p>
     </div>
   </section>
 
   @if (db.universes().length) {
-    <section class="card">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  aria-label="Seleccionar todos"
-                  [checked]="allSelected()"
-                  [indeterminate]="selected().size > 0 && !allSelected()"
-                  (change)="toggleAll($any($event.target).checked)"
-                />
-              </th>
-              <th>Universo</th>
-              <th>Jugador</th>
-              <th>Exportación más reciente</th>
-              <th class="num">Expediciones en bruto</th>
-              <th class="num">Combates en bruto</th>
-              <th>Agregados diarios</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (u of db.universes(); track u.id) {
-              <tr>
-                <td>
-                  <input
-                    type="checkbox"
-                    [id]="'sel-' + u.slug"
-                    [checked]="selected().has(u.id)"
-                    (change)="toggle(u.id, $any($event.target).checked)"
-                  />
-                </td>
-                <td>
-                  <label [for]="'sel-' + u.slug">{{ u.host }}</label>
-                  <a class="detail-link" [routerLink]="['/universo', u.slug]">detalle</a>
-                </td>
-                <td>{{ u.playerId }}</td>
-                <td>{{ u.exportedAt ? (u.exportedAt | date: 'short') : '—' }}</td>
-                <td class="num">{{ u.expeditions | number }}</td>
-                <td class="num">{{ u.combats | number }}</td>
-                <td>{{ u.days ? u.firstDay + ' – ' + u.lastDay : '—' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <section class="list">
+      <label class="select-all">
+        <input
+          type="checkbox"
+          [checked]="allSelected()"
+          [indeterminate]="selected().size > 0 && !allSelected()"
+          (change)="toggleAll($any($event.target).checked)"
+        />
+        <span>Seleccionar todos ({{ db.universes().length }})</span>
+      </label>
+
+      <ul class="universe-list">
+        @for (u of db.universes(); track u.id) {
+          <li>
+            <label class="card universe" [class.selected]="selected().has(u.id)">
+              <input
+                type="checkbox"
+                [checked]="selected().has(u.id)"
+                (change)="toggle(u.id, $any($event.target).checked)"
+              />
+              <span class="universe-body">
+                <strong>{{ u.host }}</strong>
+                <span class="muted">
+                  Jugador {{ u.playerId }} ·
+                  {{ u.exportedAt ? (u.exportedAt | date: 'short') : '—' }}
+                </span>
+                <span class="muted">
+                  {{ u.expeditions | number }} expediciones · {{ u.combats | number }} combates ·
+                  {{ u.days }} días
+                </span>
+              </span>
+            </label>
+          </li>
+        }
+      </ul>
     </section>
 
     <section class="card options">
@@ -67,25 +55,19 @@
           (change)="fullHistory.set($any($event.target).checked)"
         />
         <span>
-          <strong>Incluir todo el histórico en bruto</strong> (copia de seguridad completa).
+          <strong>Incluir todo el histórico en bruto</strong><br />
           <span class="muted">
-            Sin marcar, solo se incluyen los registros que OGI conserva (5 días de expediciones,
-            descubrimientos y recolecciones), para no superar su límite de 5 MB. Los agregados
-            diarios se incluyen siempre completos.
+            Copia de seguridad completa. Sin marcar, solo se incluyen los registros que OGI conserva
+            (5 días de expediciones, descubrimientos y recolecciones) para no superar su límite de 5
+            MB. Los agregados diarios van siempre completos.
           </span>
         </span>
       </label>
-      <div>
-        <button
-          class="btn primary"
-          type="button"
-          [disabled]="!selected().size || busy()"
-          (click)="export()"
-        >
-          {{ busy() ? 'Exportando…' : 'Exportar ' + selected().size + ' universo(s)' }}
-        </button>
-      </div>
-      @if (log().length) {
+    </section>
+
+    @if (log().length) {
+      <section class="card">
+        <h2>Archivos generados</h2>
         <ul class="log">
           @for (entry of log(); track entry) {
             <li>
@@ -96,8 +78,28 @@
             </li>
           }
         </ul>
-      }
-    </section>
+      </section>
+    }
+
+    <div class="action-bar">
+      <button
+        class="btn primary block"
+        type="button"
+        [disabled]="!selected().size || busy()"
+        (click)="export()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3" />
+        </svg>
+        {{
+          busy()
+            ? 'Exportando…'
+            : selected().size
+              ? 'Descargar ' + selected().size + ' archivo(s)'
+              : 'Elige al menos un universo'
+        }}
+      </button>
+    </div>
   } @else if (db.ready()) {
     <div class="card empty">
       No hay universos con datos. Importa primero algún archivo <code>.data</code>.

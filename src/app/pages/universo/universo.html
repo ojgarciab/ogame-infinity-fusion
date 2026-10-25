@@ -1,17 +1,19 @@
 <div class="page">
-  <a class="back" routerLink="/">← Universos</a>
+  <a class="back" routerLink="/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" /></svg>
+    Universos
+  </a>
 
   @if (summary(); as s) {
     <section class="page-header">
       <div>
         <h1>{{ s.host }}</h1>
         <p>
-          Jugador {{ s.playerId }} · exportación más reciente
-          {{ s.exportedAt ? (s.exportedAt | date: 'short') : '—' }} ·
-          {{ s.importCount }} importación(es)
+          Jugador {{ s.playerId }} · {{ s.importCount }} importación(es)<br />
+          Última exportación: {{ s.exportedAt ? (s.exportedAt | date: 'short') : '—' }}
         </p>
       </div>
-      <div class="row">
+      <div class="actions">
         <a class="btn primary" routerLink="/exportar" [queryParams]="{ u: s.slug }">Exportar</a>
         <button class="btn danger" type="button" (click)="remove()">Eliminar</button>
       </div>
@@ -24,122 +26,184 @@
           ><span>Expediciones</span>
         </div>
         <div class="stat">
+          <b>{{ d.totals.combats | number }}</b
+          ><span>Combates</span>
+        </div>
+        <div class="stat wide">
           <b
-            >{{ d.totals.found[0] | compact }} / {{ d.totals.found[1] | compact }} /
+            >{{ d.totals.found[0] | compact }} · {{ d.totals.found[1] | compact }} ·
             {{ d.totals.found[2] | compact }}</b
           >
-          <span>Metal / cristal / deuterio en expediciones</span>
+          <span>Metal · cristal · deuterio en expediciones</span>
+        </div>
+        <div class="stat wide">
+          <b
+            ><span [class.neg]="d.totals.loot[0] < 0">{{ d.totals.loot[0] | compact }}</span> ·
+            <span [class.neg]="d.totals.loot[1] < 0">{{ d.totals.loot[1] | compact }}</span> ·
+            <span [class.neg]="d.totals.loot[2] < 0">{{ d.totals.loot[2] | compact }}</span></b
+          >
+          <span>Botín metal · cristal · deuterio</span>
         </div>
         <div class="stat">
           <b>{{ d.totals.found[3] | number }}</b
           ><span>Materia oscura</span>
         </div>
         <div class="stat">
-          <b>{{ d.totals.combats | number }}</b
-          ><span>Combates</span>
-        </div>
-        <div class="stat">
-          <b
-            >{{ d.totals.loot[0] | compact }} / {{ d.totals.loot[1] | compact }} /
-            {{ d.totals.loot[2] | compact }}</b
-          >
-          <span>Botín metal / cristal / deuterio</span>
-        </div>
-        <div class="stat">
           <b>{{ rawCounts().expeditions | number }} / {{ rawCounts().combats | number }}</b>
-          <span>Expediciones / combates en bruto</span>
+          <span>Exped. / combates en bruto</span>
         </div>
       </section>
 
-      <section class="card">
-        <h2>Agregados diarios fusionados</h2>
+      <section class="days">
+        <h2>Agregados diarios</h2>
         <p class="muted legend">
-          Origen: <span class="tag bruto">bruto</span> recalculado desde los informes ·
+          <span class="tag bruto">bruto</span> recalculado desde los informes ·
           <span class="tag importado">importado</span> el agregado importado más alto ·
-          <span class="tag mixto">mixto</span> combinación.
+          <span class="tag mixto">mixto</span> combinación
         </p>
-        <div class="table-wrap scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Día</th>
-                <th class="num">Exped.</th>
-                <th>Origen</th>
-                <th class="num">Metal</th>
-                <th class="num">Cristal</th>
-                <th class="num">Deut.</th>
-                <th class="num">MO</th>
-                <th class="num">Combates</th>
-                <th>Origen</th>
-                <th class="num">Botín M</th>
-                <th class="num">Botín C</th>
-                <th class="num">Botín D</th>
-                <th class="num">Descubr.</th>
-                <th>Origen</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (r of d.rows; track r.day) {
-                <tr>
-                  <td>{{ r.day }}</td>
-                  <td class="num">{{ r.expeditions ?? '—' }}</td>
-                  <td>
-                    @if (r.expSource) {
-                      <span class="tag" [class]="r.expSource">{{ r.expSource }}</span>
-                    }
-                  </td>
-                  @for (v of r.found; track $index) {
-                    <td class="num">{{ v | compact }}</td>
+
+        <!-- Móvil: una tarjeta por día. -->
+        <ol class="day-list">
+          @for (r of rows(); track r.day) {
+            <li class="card day">
+              <h3>{{ r.day }}</h3>
+              <div class="day-block">
+                <div class="day-label">
+                  Expediciones <strong>{{ r.expeditions ?? '—' }}</strong>
+                  @if (r.expSource) {
+                    <span class="tag" [class]="r.expSource">{{ r.expSource }}</span>
                   }
-                  <td class="num">{{ r.combats ?? '—' }}</td>
-                  <td>
+                </div>
+                @if (r.expeditions) {
+                  <div class="res">
+                    <span><small>M</small> {{ r.found[0] | compact }}</span>
+                    <span><small>C</small> {{ r.found[1] | compact }}</span>
+                    <span><small>D</small> {{ r.found[2] | compact }}</span>
+                    <span><small>MO</small> {{ r.found[3] | compact }}</span>
+                  </div>
+                }
+              </div>
+              @if (r.combats !== null) {
+                <div class="day-block">
+                  <div class="day-label">
+                    Combates <strong>{{ r.combats }}</strong>
                     @if (r.comSource) {
                       <span class="tag" [class]="r.comSource">{{ r.comSource }}</span>
                     }
-                  </td>
-                  @for (v of r.loot; track $index) {
-                    <td class="num" [class.neg]="v < 0">{{ v | compact }}</td>
+                  </div>
+                  @if (r.combats) {
+                    <div class="res">
+                      <span [class.neg]="r.loot[0] < 0"
+                        ><small>M</small> {{ r.loot[0] | compact }}</span
+                      >
+                      <span [class.neg]="r.loot[1] < 0"
+                        ><small>C</small> {{ r.loot[1] | compact }}</span
+                      >
+                      <span [class.neg]="r.loot[2] < 0"
+                        ><small>D</small> {{ r.loot[2] | compact }}</span
+                      >
+                    </div>
                   }
-                  <td class="num">{{ r.discoveries ?? '—' }}</td>
-                  <td>
+                </div>
+              }
+              @if (r.discoveries !== null) {
+                <div class="day-block">
+                  <div class="day-label">
+                    Descubrimientos <strong>{{ r.discoveries }}</strong>
                     @if (r.disSource) {
                       <span class="tag" [class]="r.disSource">{{ r.disSource }}</span>
                     }
-                  </td>
-                </tr>
+                  </div>
+                </div>
               }
-            </tbody>
-          </table>
+            </li>
+          }
+        </ol>
+
+        <!-- Pantallas anchas: tabla. -->
+        <div class="card table-card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th class="num">Exped.</th>
+                  <th>Origen</th>
+                  <th class="num">Metal</th>
+                  <th class="num">Cristal</th>
+                  <th class="num">Deut.</th>
+                  <th class="num">MO</th>
+                  <th class="num">Combates</th>
+                  <th>Origen</th>
+                  <th class="num">Botín M</th>
+                  <th class="num">Botín C</th>
+                  <th class="num">Botín D</th>
+                  <th class="num">Descubr.</th>
+                  <th>Origen</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of rows(); track r.day) {
+                  <tr>
+                    <td>{{ r.day }}</td>
+                    <td class="num">{{ r.expeditions ?? '—' }}</td>
+                    <td>
+                      @if (r.expSource) {
+                        <span class="tag" [class]="r.expSource">{{ r.expSource }}</span>
+                      }
+                    </td>
+                    @for (v of r.found; track $index) {
+                      <td class="num">{{ v | compact }}</td>
+                    }
+                    <td class="num">{{ r.combats ?? '—' }}</td>
+                    <td>
+                      @if (r.comSource) {
+                        <span class="tag" [class]="r.comSource">{{ r.comSource }}</span>
+                      }
+                    </td>
+                    @for (v of r.loot; track $index) {
+                      <td class="num" [class.neg]="v < 0">{{ v | compact }}</td>
+                    }
+                    <td class="num">{{ r.discoveries ?? '—' }}</td>
+                    <td>
+                      @if (r.disSource) {
+                        <span class="tag" [class]="r.disSource">{{ r.disSource }}</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        @if (hiddenDays() > 0) {
+          <button class="btn block" type="button" (click)="showMore()">
+            Mostrar más días ({{ hiddenDays() }} restantes)
+          </button>
+        }
       </section>
 
-      <section class="card">
+      <section class="imports">
         <h2>Archivos importados</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Archivo</th>
-                <th>Importado</th>
-                <th>Exportado (aprox.)</th>
-                <th>Aportó</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (imp of d.imports; track imp.id) {
-                <tr>
-                  <td>{{ imp.fileName }}</td>
-                  <td>{{ imp.importedAt | date: 'short' }}</td>
-                  <td>{{ imp.exportedAt ? (imp.exportedAt | date: 'short') : '—' }}</td>
-                  <td>
-                    {{ imp.stats.newRecords }} nuevos, {{ imp.stats.updatedRecords }} actualizados,
-                    {{ imp.stats.newDays + imp.stats.betterDays }} días de agregados
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <ul class="import-list">
+          @for (imp of d.imports; track imp.id) {
+            <li class="card">
+              <strong>{{ imp.fileName }}</strong>
+              <dl class="kv">
+                <dt>Importado</dt>
+                <dd>{{ imp.importedAt | date: 'short' }}</dd>
+                <dt>Exportado (aprox.)</dt>
+                <dd>{{ imp.exportedAt ? (imp.exportedAt | date: 'short') : '—' }}</dd>
+                <dt>Aportó</dt>
+                <dd>
+                  {{ imp.stats.newRecords }} nuevos · {{ imp.stats.updatedRecords }} act. ·
+                  {{ imp.stats.newDays + imp.stats.betterDays }} días
+                </dd>
+              </dl>
+            </li>
+          }
+        </ul>
       </section>
     } @else if (detail.isLoading()) {
       <p class="muted">Cargando…</p>

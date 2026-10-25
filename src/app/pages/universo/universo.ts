@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, computed, inject, input, resource } from '@angular/core';
+import { Component, computed, inject, input, resource, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DbService, ImportRecord, LoadedUniverse } from '../../core/db.service';
 import { DaySum, SumSource, computeFinalSums, sortDayKeys } from '../../core/merge';
@@ -55,6 +55,19 @@ export class Universo {
       return { loaded, imports, ...this.buildRows(loaded) };
     },
   });
+
+  /** Días visibles: en móvil se muestran por bloques para no cargar listas largas. */
+  protected readonly visibleDays = signal(14);
+  protected readonly rows = computed(
+    () => this.detail.value()?.rows.slice(0, this.visibleDays()) ?? [],
+  );
+  protected readonly hiddenDays = computed(
+    () => (this.detail.value()?.rows.length ?? 0) - this.rows().length,
+  );
+
+  protected showMore(): void {
+    this.visibleDays.update((n) => n + 30);
+  }
 
   protected readonly rawCounts = computed(() => {
     const raw = this.detail.value()?.loaded.raw ?? {};

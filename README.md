@@ -10,7 +10,12 @@ equipo. Una vez instalada, funciona sin conexión.
 
 ## Uso
 
-- **Importar**: botón «Importar» de la cabecera, o arrastrar archivos `.data` a
+El diseño es mobile-first: la prioridad es usarla en el móvil, con navegación
+inferior (Universos · Importar · Exportar), botones táctiles de al menos 44 px,
+listas en tarjetas y la acción principal fija al alcance del pulgar. En pantallas
+anchas, la navegación pasa a la cabecera y los agregados diarios se ven en tabla.
+
+- **Importar**: botón central de la barra inferior (o «Importar» en la cabecera, en escritorio), o arrastrar archivos `.data` a
   cualquier parte de la ventana, desde cualquier página. Se aceptan varios archivos
   a la vez, de uno o varios universos; se agrupan por universo y jugador
   (`universeUrl` + `playerId`). Si un archivo ya se importó, se ignora.

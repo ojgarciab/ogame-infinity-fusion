@@ -1,6 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { DbService } from '../../core/db.service';
 import { ExportResult, ExportService } from '../../core/export.service';
 import { BytesPipe } from '../../shared/bytes.pipe';
@@ -12,7 +11,7 @@ interface ExportLogEntry {
 
 @Component({
   selector: 'app-exportar',
-  imports: [RouterLink, DatePipe, DecimalPipe],
+  imports: [DatePipe, DecimalPipe],
   templateUrl: './exportar.html',
   styleUrl: './exportar.scss',
 })

@@ -1,13 +1,84 @@
-.options {
+.list {
   display: grid;
+  gap: 8px;
+}
+
+.select-all {
+  display: flex;
+  align-items: center;
   gap: 12px;
-}
-
-.detail-link {
-  margin-left: 8px;
-  font-size: 12px;
-}
-
-label {
+  min-height: var(--touch);
+  padding: 0 16px;
   cursor: pointer;
+}
+
+.universe-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.universe {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  &.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+.universe-body {
+  display: grid;
+  min-width: 0;
+
+  strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .muted {
+    font-size: 14px;
+  }
+}
+
+// Barra de acción fija sobre la navegación inferior, al alcance del pulgar.
+.action-bar {
+  position: sticky;
+  bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + 8px);
+  z-index: 10;
+  padding: 8px;
+  margin: 0 -8px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+@media (min-width: 640px) {
+  .universe-list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .action-bar {
+    bottom: 8px;
+
+    .btn {
+      width: auto;
+      min-width: 280px;
+    }
+  }
+
+  @media (hover: hover) {
+    .universe:hover {
+      border-color: var(--accent);
+    }
+  }
 }

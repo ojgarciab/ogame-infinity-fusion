@@ -1,51 +1,48 @@
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
+<!--
+  Sin atributo accept: en Android un accept=".data" deja los archivos sin
+  seleccionar porque la extensión no tiene tipo MIME. El contenido se valida al importar.
+-->
+<input #fileInput class="file-input" type="file" multiple (change)="onFiles(fileInput)" />
+
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" routerLink="/">
-      <img src="icons/icon.svg" alt="" width="28" height="28" />
+      <img src="icons/icon.svg" alt="" width="32" height="32" />
       <span>OGI Fusion</span>
     </a>
 
-    <nav class="nav" aria-label="Principal">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        >Universos</a
-      >
+    <nav class="nav-top" aria-label="Principal">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Universos
+      </a>
       <a routerLink="/exportar" routerLinkActive="active">Exportar</a>
     </nav>
 
     <div class="topbar-actions">
-      <input
-        #fileInput
-        type="file"
-        multiple
-        accept=".data,.json,application/json,text/plain"
-        hidden
-        (change)="onFiles(fileInput)"
-      />
       <button
-        class="btn primary"
+        class="btn primary import-top"
         type="button"
-        aria-label="Importar archivos .data"
         [disabled]="importer.busy()"
         (click)="fileInput.click()"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3" />
         </svg>
-        <span>{{ importer.busy() ? 'Importando…' : 'Importar' }}</span>
+        {{ importer.busy() ? 'Importando…' : 'Importar' }}
       </button>
       @if (pwa.canInstall()) {
         <button
-          class="btn"
+          class="btn icon"
           type="button"
           aria-label="Instalar como aplicación"
+          title="Instalar"
           (click)="pwa.install()"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 4h14v12H5zM9 20h6M12 16v4" />
+            <path d="M12 3v10m0 0-4-4m4 4 4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
           </svg>
-          <span>Instalar</span>
         </button>
       }
       <button
@@ -76,7 +73,7 @@
 
 @if (pwa.updateReady()) {
   <div class="banner" role="status">
-    Hay una nueva versión disponible.
+    <span>Hay una nueva versión disponible.</span>
     <button class="btn small" type="button" (click)="pwa.reload()">Actualizar</button>
   </div>
 }
@@ -86,7 +83,7 @@
   </div>
 }
 
-<main id="contenido" class="container">
+<main id="contenido" class="container main">
   <router-outlet />
 </main>
 
@@ -94,9 +91,33 @@
   Todo se procesa y guarda en este navegador (IndexedDB). Nada sale de tu equipo.
 </footer>
 
+<nav class="nav-bottom" aria-label="Principal">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" />
+    </svg>
+    <span>Universos</span>
+  </a>
+  <button type="button" class="import-fab" [disabled]="importer.busy()" (click)="fileInput.click()">
+    <span class="fab-circle">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3" />
+      </svg>
+    </span>
+    <span>{{ importer.busy() ? 'Importando…' : 'Importar' }}</span>
+  </button>
+  <a routerLink="/exportar" routerLinkActive="active">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 15V3m0 0L8 7m4-4 4 4M4 17v3h16v-3" />
+    </svg>
+    <span>Exportar</span>
+  </a>
+</nav>
+
 @if (importer.lastBatch(); as b) {
   <div class="toast" role="status">
-    <span>
+    <span class="toast-text">
       {{ b.ok }} archivo(s) importado(s)
       @if (b.skipped) {
         · {{ b.skipped }} ya importado(s)
@@ -105,7 +126,7 @@
         · <span class="err">{{ b.failed }} con errores</span>
       }
     </span>
-    <a routerLink="/" (click)="importer.dismissBatch()">Ver detalles</a>
+    <a class="btn small" routerLink="/" (click)="importer.dismissBatch()">Ver</a>
     <button
       class="btn small icon"
       type="button"
