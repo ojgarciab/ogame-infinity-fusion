@@ -1,13 +1,21 @@
 {
+  "id": "./",
   "name": "OGI Fusion",
   "short_name": "OGI Fusion",
   "description": "Fusiona exportaciones de OGame Infinity de uno o varios universos, 100% en local.",
   "lang": "es",
-  "display": "standalone",
-  "scope": "./",
+  "dir": "ltr",
   "start_url": "./",
-  "theme_color": "#0d1117",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
   "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "categories": [
+    "games",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icons/icon-72x72.png",
@@ -68,6 +76,22 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/movil.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Universos con datos en el móvil"
+    },
+    {
+      "src": "screenshots/escritorio.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Agregados diarios fusionados de un universo"
     }
   ]
 }

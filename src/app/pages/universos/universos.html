@@ -42,6 +42,17 @@
     </details>
   }
 
+  @if (installer.available()) {
+    <section class="card install-card">
+      <img src="icons/icon.svg" alt="" width="48" height="48" />
+      <div>
+        <h2>Instala OGI Fusion</h2>
+        <p class="muted">Ábrela como una aplicación más del móvil y úsala sin conexión.</p>
+      </div>
+      <button class="btn primary" type="button" (click)="installer.install()">Instalar</button>
+    </section>
+  }
+
   <section class="section-head">
     <h2>Universos con datos</h2>
     <span class="muted">{{ db.universes().length }}</span>

@@ -32,17 +32,19 @@
         </svg>
         {{ importer.busy() ? 'Importando…' : 'Importar' }}
       </button>
-      @if (pwa.canInstall()) {
+      @if (installer.available()) {
         <button
-          class="btn icon"
+          class="btn install-btn"
           type="button"
           aria-label="Instalar como aplicación"
-          title="Instalar"
-          (click)="pwa.install()"
+          title="Instalar como aplicación"
+          (click)="installer.install()"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3v10m0 0-4-4m4 4 4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
+            <rect x="6" y="2" width="12" height="20" rx="2" />
+            <path d="M12 7v7m0 0-3-3m3 3 3-3M11 18h2" />
           </svg>
+          <span>Instalar</span>
         </button>
       }
       <button
@@ -71,10 +73,10 @@
   </div>
 </header>
 
-@if (pwa.updateReady()) {
+@if (updates.available()) {
   <div class="banner" role="status">
     <span>Hay una nueva versión disponible.</span>
-    <button class="btn small" type="button" (click)="pwa.reload()">Actualizar</button>
+    <button class="btn small primary" type="button" (click)="updates.update()">Actualizar</button>
   </div>
 }
 @if (!db.supported) {
@@ -142,6 +144,27 @@
       ✕
     </button>
   </div>
+}
+
+@if (installer.showIosHelp()) {
+  <div class="sheet-backdrop" (click)="installer.showIosHelp.set(false)"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="ios-help-title">
+    <h2 id="ios-help-title">Instalar en iPhone o iPad</h2>
+    <ol>
+      <li>
+        Toca el botón <strong>Compartir</strong>
+        <svg viewBox="0 0 24 24" aria-label="Compartir">
+          <path d="M12 15V3m0 0L8 7m4-4 4 4M6 11H5v10h14V11h-1" />
+        </svg>
+        de Safari.
+      </li>
+      <li>Elige <strong>Añadir a pantalla de inicio</strong>.</li>
+      <li>Confirma con <strong>Añadir</strong>.</li>
+    </ol>
+    <button class="btn primary block" type="button" (click)="installer.showIosHelp.set(false)">
+      Entendido
+    </button>
+  </section>
 }
 
 @if (dragging()) {

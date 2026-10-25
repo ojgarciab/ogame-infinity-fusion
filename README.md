@@ -24,7 +24,14 @@ anchas, la navegación pasa a la cabecera y los agregados diarios se ven en tabl
 - **Exportar**: se eligen los universos en un listado y se descarga un
   `oginfinity-<idioma>-<universo>.data` por cada uno.
 - **Tema** claro u oscuro: por defecto, el del sistema; si se cambia, se recuerda.
-- **Instalar**: el botón aparece cuando el navegador permite instalar la aplicación.
+- **Instalar**: en Chrome, Edge y Samsung Internet aparecen un botón en la
+  cabecera y una tarjeta en el inicio que abren el diálogo de instalación del
+  navegador. En iPhone y iPad se muestran los pasos para añadirla a la pantalla de
+  inicio desde Safari. Una vez instalada, el botón desaparece.
+- **Sin conexión y actualizaciones**: el service worker guarda la aplicación en
+  caché, así que funciona sin conexión, incluido el acceso directo a cualquier
+  URL. Comprueba si hay versión nueva al volver a la aplicación y cada media
+  hora, y ofrece «Actualizar» cuando la ha descargado.
 
 Conviene importar una exportación al menos cada 4 o 5 días: OGI borra las
 expediciones, descubrimientos y recolecciones en bruto de más de 5 días, y esta
@@ -76,7 +83,10 @@ Estructura:
 
 - `src/app/core/merge.ts`: lógica pura de fusión, sin dependencias de Angular.
 - `src/app/core/db.service.ts`: almacenamiento en IndexedDB.
-- `src/app/core/*.service.ts`: importación, exportación, tema y PWA.
+- `src/app/core/*.service.ts`: importación, exportación, tema, instalación
+  (`install.service.ts`) y actualizaciones (`update.service.ts`).
+- `src/index.html`: guarda el evento `beforeinstallprompt` aunque Chrome lo emita
+  antes de que arranque Angular.
 - `src/app/pages/`: páginas `universos`, `universo/:slug` y `exportar`.
 
 ## Despliegue en GitHub Pages
