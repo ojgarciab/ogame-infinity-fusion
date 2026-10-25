@@ -150,6 +150,11 @@ input[type='checkbox'] {
 .page {
   display: grid;
   gap: 16px;
+
+  // Los elementos de una rejilla no encogen por debajo de su contenido sin esto.
+  > * {
+    min-width: 0;
+  }
 }
 
 .page-header {

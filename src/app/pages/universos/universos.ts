@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DbService } from '../../core/db.service';
 import { ImportService } from '../../core/import.service';
+import { InstallService } from '../../core/install.service';
 
 @Component({
   selector: 'app-universos',
@@ -13,6 +14,7 @@ import { ImportService } from '../../core/import.service';
 export class Universos {
   protected readonly db = inject(DbService);
   protected readonly importer = inject(ImportService);
+  protected readonly installer = inject(InstallService);
 
   protected onFiles(input: HTMLInputElement): void {
     const files = Array.from(input.files ?? []);

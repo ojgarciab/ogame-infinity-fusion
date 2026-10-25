@@ -46,6 +46,48 @@
   gap: 8px;
 }
 
+// En móvil el botón de instalar es solo un icono; el texto aparece en pantallas anchas.
+.install-btn {
+  width: var(--touch);
+  padding: 0;
+
+  span {
+    display: none;
+  }
+}
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgb(0 0 0 / 45%);
+}
+
+// Hoja inferior (bottom sheet) en móvil; diálogo centrado en pantallas anchas.
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 201;
+  padding: 20px var(--gutter) calc(20px + var(--safe-bottom));
+  border-radius: 16px 16px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 30%);
+
+  ol {
+    margin: 0 0 16px;
+    padding-left: 20px;
+    display: grid;
+    gap: 8px;
+  }
+
+  svg {
+    vertical-align: middle;
+    color: var(--accent);
+  }
+}
+
 .banner {
   margin: 12px var(--gutter) 0;
   padding: 10px 12px;
@@ -231,6 +273,25 @@
 
   .import-top {
     display: inline-flex;
+  }
+
+  .install-btn {
+    width: auto;
+    padding: 8px 16px;
+
+    span {
+      display: inline;
+    }
+  }
+
+  .sheet {
+    left: 50%;
+    right: auto;
+    bottom: 50%;
+    width: 420px;
+    transform: translate(-50%, 50%);
+    border-radius: 16px;
+    padding-bottom: 20px;
   }
 
   .nav-bottom {

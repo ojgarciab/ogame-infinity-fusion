@@ -2,8 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DbService } from './core/db.service';
 import { ImportService } from './core/import.service';
-import { PwaService } from './core/pwa.service';
+import { InstallService } from './core/install.service';
 import { ThemeService } from './core/theme.service';
+import { UpdateService } from './core/update.service';
 
 function hasFiles(event: DragEvent): boolean {
   return Array.from(event.dataTransfer?.types ?? []).includes('Files');
@@ -24,7 +25,8 @@ function hasFiles(event: DragEvent): boolean {
 export class App {
   protected readonly db = inject(DbService);
   protected readonly importer = inject(ImportService);
-  protected readonly pwa = inject(PwaService);
+  protected readonly installer = inject(InstallService);
+  protected readonly updates = inject(UpdateService);
   protected readonly theme = inject(ThemeService);
   protected readonly dragging = signal(false);
   private dragDepth = 0;
