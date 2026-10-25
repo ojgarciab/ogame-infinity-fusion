@@ -92,3 +92,8 @@ Una vez instalado el service worker, las navegaciones se sirven desde la caché.
 
 Configuración necesaria en el repositorio: _Settings → Pages → Build and
 deployment → Source: **GitHub Actions**_.
+
+## Agradecimientos
+
+A Claude, de Anthropic, por su inestimable ayuda en el desarrollo y la depuración
+de este proyecto.
